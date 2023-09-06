@@ -9,6 +9,8 @@ from flask.templating import render_template
 from flask import Flask, redirect, url_for
 import logging
 import MyEnDecryption
+import emailSender
+
 app = Flask(__name__, template_folder='static/FrontEnd')
 accountUser = MyEnDecryption.decrypt_account('mysqlUser','userAcount')
 def loopDataWithGoogleChart(inputList : dict):
@@ -115,6 +117,16 @@ def ins_ajax():
     return jsonify({'msg': result})
 
 
+@app.route('/email.ajax', methods=['POST'])
+def email_ajax():
+    data = request.get_json()
+    addr = data['addr']
+    r = emailSender.mainEmail(addr)
+    if r=='sucess':
+        result='이메일 전송에 성공 했습니다!'
+    else :
+        result='전송 실패'
+    return jsonify({'msg': result})
 
 #delete를 위한 구문
 @app.route('/del.ajax', methods=['POST'])
@@ -137,6 +149,7 @@ def getterSetter():
     for key in parameter_dict.keys():
         parameters += 'key: {}, value: {}\n'.format(key, request.args[key])
     db = dbHandling.DB()
+    print(parameters)
     cntList = db.getSample(parameter_dict['name'])
     return jsonify(cntList)
 
@@ -147,7 +160,7 @@ def read_data():
 
 @app.route('/onlySTRING', methods=['GET'])
 def onlyStringReturn():
-    return '아주 심플하죠\n이런것도 먹습니다'
+    return '아주 심플하죠\n이런것도 먹습니다\n하하하'
     
 ## GET API SAMPLE##
 @app.route('/silsoupSample')
@@ -162,6 +175,7 @@ def read_data_userInfo():
     db = dbHandling.DB()
     cntList = db.getSampleUserInfo(parameter_dict['name'])
     return jsonify(cntList)
+
 ## POST API SAMPLE##
 @app.route('/deleteData', methods=['POST'])
 def deleteWithWeb():
@@ -174,8 +188,9 @@ def deleteWithWeb():
         parameters += 'key: {}, value: {}\n'.format(key, request.args[key])
     result = parameter_dict['para']
     return result
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+# log = logging.getLogger('werkzeug')
+# log.setLevel(logging.ERROR)
 
 if __name__ == '__main__':
+    ##app.run(host='0.0.0.0', port=9874,debug=True) # debug = True는 해당 파일의 코드를 수정할 때마다 Flask가 변경된 것을 인식하고 다시 시작한다.
     app.run(host='KRK4OFLTP00765', port=9874,debug=True) # debug = True는 해당 파일의 코드를 수정할 때마다 Flask가 변경된 것을 인식하고 다시 시작한다.
