@@ -64,9 +64,9 @@ def decrypt_account(system_name : str, id : str):
 
 
 if __name__ == '__main__':
-    encrypt_account("mysqlUser", "userAcount", "Amkor123!")
-    r = decrypt_account("mysqlUser", "userAcount")
-    print(r)
+    encrypt_account("mysqlAdmin", "root", "Amkor123!")
+    accountUser = decrypt_account('mysqlAdmin','root')
+    print(accountUser)
     
 
 

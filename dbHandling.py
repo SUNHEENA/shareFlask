@@ -6,7 +6,7 @@ import MyEnDecryption
 
 class DB:
     def __init__(self):
-        account = MyEnDecryption.decrypt_account('mysqlAdmin','root')
+        account = MyEnDecryption.decrypt_account('mysqlUser','userAcount')
         self.db_con = pymysql.connect(
                 user=account[0],
                 passwd=account[1],
@@ -41,7 +41,7 @@ class DB:
         countList = {"MAIN": 0, "cht": 0, "idx2": 0, "dff": 0, "mysql": 0}
         for index, row in countDF.iterrows():
             temp = countDF[countDF['day'] == countDF['day'][index]]
-            r = int(temp['count'])
+            r = int(temp['count'].iloc[0])
             countList[countDF['day'][index]] = r
         return countList
 
@@ -84,9 +84,11 @@ class DB:
 
         rows = self.cursor.fetchall()
         for e in rows:
-            temp = {'name': e['name'], 'location': e['location']}
+            temp = {'name': e['name'], 'location': e['location'], 'badge': e['badge']}
             ret.append(temp)
-
+        if len(ret)==0 :
+            temp = {'name': 'None', 'location': 'NonData' }
+            ret.append(temp)
         return ret
 
     def __del__(self):
