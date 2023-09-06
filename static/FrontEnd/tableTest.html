@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/static/js/xslxConvert.js"></script>
+<style>
+table, th, td{
+	border : 1px solid black;
+}
+
+tr:nth-child(even) {
+    background-color: red;
+}
+button {
+    color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 9pt;
+    outline: none;
+}
+
+button:hover {
+    border: 1px #C6C6C6 solid;
+    box-shadow: 1px 1px 1px #EAEAEA;
+    color: #333333;
+    background: #F7F7F7;
+}
+
+button:active {
+    box-shadow: inset 1px 1px 1px #DFDFDF;
+}
+button.orange {
+    color: white;
+    border: 1px solid #FB8F3D;
+    background: -webkit-linear-gradient(top, #FDA251, #FB8F3D);
+    background: -moz-linear-gradient(top, #FDA251, #FB8F3D);
+    background: -ms-linear-gradient(top, #FDA251, #FB8F3D);
+}
+
+button.orange:hover {
+    border: 1px solid #EB5200;
+    background: -webkit-linear-gradient(top, #FD924C, #F9760B);
+    background: -moz-linear-gradient(top, #FD924C, #F9760B);
+    background: -ms-linear-gradient(top, #FD924C, #F9760B);
+    box-shadow: 0 1px #EFEFEF;
+}
+
+button.orange:active {
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);
+}
+button.red {
+    background: -webkit-linear-gradient(top, #DD4B39, #D14836);
+    background: -moz-linear-gradient(top, #DD4B39, #D14836);
+    background: -ms-linear-gradient(top, #DD4B39, #D14836);
+    border: 1px solid #DD4B39;
+    color: white;
+    text-shadow: 0 1px 0 #C04131;
+}
+
+button.red:hover {
+     background: -webkit-linear-gradient(top, #DD4B39, #C53727);
+     background: -moz-linear-gradient(top, #DD4B39, #C53727);
+     background: -ms-linear-gradient(top, #DD4B39, #C53727);
+     border: 1px solid #AF301F;
+}
+
+button.red:active {
+     box-shadow: inset 0 1px 1px rgba(0,0,0,0.2);
+    background: -webkit-linear-gradient(top, #D74736, #AD2719);
+    background: -moz-linear-gradient(top, #D74736, #AD2719);
+    background: -ms-linear-gradient(top, #D74736, #AD2719);
+}
+</style>
+<meta charset="UTF-8">
+
+<title>비동기통신을 연습해봅시다.</title>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+	<script type="text/javascript">
+	function fun_add(){
+		const t = document.getElementById("typeInput").value
+		const c = document.getElementById("cntInput").value
+		var param = {
+			'type' : t,
+			'cnt' : c
+		}
+
+		$.ajax({
+			type : 'POST',
+			url : '/ins.ajax',
+			data : JSON.stringify(param),
+			dataType : 'JSON',
+			contentType : "application/json",
+			success : function(data){
+				let msgs = data['msg']
+                alert(msgs)
+                //location.reload()
+				addRow(t,c)
+				<!--getResult()-->
+			},
+			error : function(request, status, error){
+				alert("에러 발생!!")
+			}
+		})
+
+	}
+	function sendEmail(){
+		const t = document.getElementById("emailInput").value
+		var param = {
+			'addr' : t
+		}
+
+		$.ajax({
+			type : 'POST',
+			url : '/email.ajax',
+			data : JSON.stringify(param),
+			dataType : 'JSON',
+			contentType : "application/json",
+			success : function(data){
+				let msgs = data['msg']
+                alert(msgs)
+                //location.reload()
+				addRow(t,c)
+				<!--getResult()-->
+			},
+			error : function(request, status, error){
+				alert("에러 발생!!")
+			}
+		})
+
+	}
+	 function getResult() {
+                $.ajax({
+                    type: "GET",
+                    url: "/getallData",
+                    data: {},
+                    success: function (response) {
+                       let msgs = response['msgReturn']
+                       document.getElementById("type").value=msgs;
+                       swal(msgs)
+                       <!-- testFunction() -->
+                    }
+                })
+     }
+    function testFunction(){
+    	alert("나 찾아?")
+    }
+	function fun_mod(){
+		const t = document.getElementById("typeInput").value
+		const c = document.getElementById("cntInput").value
+		var param = {
+			'type' : t,
+			'cnt' : c
+		}
+
+		$.ajax({
+			type : 'POST',
+			url : '/mod.ajax',
+			data : JSON.stringify(param),
+			dataType : 'JSON',
+			contentType : "application/json",
+			success : function(data){
+				let msgs = data['msg']
+                alert(msgs)
+				location.reload()
+			},
+			error : function(request, status, error){
+
+			}
+		})
+	}
+	function fun_del(){
+		const t = document.getElementById("typeInput").value
+		var param = {
+			'type' : t
+		}
+		$.ajax({
+			type : 'POST',
+			url : '/del.ajax',
+			data : JSON.stringify(param),
+			dataType : 'JSON',
+			contentType : "application/json",
+			success : function(data){
+				let msgs = data['msg']
+                alert(msgs)
+				location.reload()
+			},
+			error : function(request, status, error){
+
+			}
+		})
+	}
+	function fn_detail(empno, name, department, phone){
+		var obj_empno = document.getElementById("empno");
+		var obj_name = document.getElementById("name");
+		var obj_department = document.getElementById("department");
+		var obj_phone = document.getElementById("phone");
+
+		obj_empno.value=empno;
+		obj_name.value=name;
+		obj_department.value=department;
+		obj_phone.value=phone;
+	}
+	function addRow(fist,sec) {
+		const table = document.getElementById('flexTable');
+		//숫자를 넣으면 원하는 위치에 넣을 수 있음insertRow(0)~xx
+		const newRow = table.insertRow();
+		const newCell1 = newRow.insertCell(0);
+		const newCell2 = newRow.insertCell(1);
+		newCell1.innerText =fist;
+		newCell2.innerText =sec;
+	}
+	function deleteRow(rownum) {
+		const table = document.getElementById('flexTable');
+		const newRow = table.deleteRow(rownum);
+	}
+</script>
+<body>
+<table id ='flexTable'>
+	<tr>
+		<th>종류</th>
+		<th>카운트</th>
+	</tr>
+		{% for result in cntList%}
+		<tr>
+			<td>{{result.day}}</td>
+			<td >{{result.count}}</td>
+			<input type='hidden' id="type" value="{{result.day}}">
+			<input type='hidden' id="cnt" value="{{result.count}}">
+		</tr>
+		{% endfor %}
+	<p><a href="/">Main으로 이동</a><br></p>
+</table>
+<table>
+	<tr>
+		<th>종류</th>
+		<td>
+			<input  type="text" id="typeInput">
+		</td>
+	</tr>
+	<tr>
+		<th>카운트</th>
+		<td>
+			<input type="text" id="cntInput">
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<button  onclick="fun_add()" id="add" class="orange" type="button" value="추가">추가</button>
+			<button  onclick="fun_mod()"id="mod" class="orange" type="button" value="수정">수정</button>
+			<button  onclick="fun_del()"id="del" class="red" type="button" value="삭제">삭제</button>
+		</td>
+	</tr>
+	<tr>
+		<p><a href="javascript:downloadExcelFindResult('type^count','type^cnt','site_excel')" class="dropbtn">💾</a></p>
+		<p>
+			<input  type="text" id="emailInput">
+			<button  onclick="sendEmail()" class="orange" type="button" >이메일 보내기</button></p>
+	</tr>
+	<tr>
+		<p><button  onclick="addRow()" class="orange" type="button" >tableAdd</button></p>
+	</tr>
+	<tr>
+		<div>{{resultDB}}</div>
+	</tr>
+</table>
+</body>
+</html>

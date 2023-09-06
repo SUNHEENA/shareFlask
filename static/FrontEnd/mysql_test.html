@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+table {
+font-family: arial, sans-serif;
+border-collapse: collapse;
+width: 40%;
+}
+
+td, th {
+    border: 1px solid rgb(53, 53, 134);
+    text-align: left;
+    padding: 8px;
+}
+titleColor {
+    background-color: #8B0000;
+}
+tr:nth-child(2) {
+    background-color: #dddddd;
+    text-align: left;
+}
+thead tr {
+    background-color: blueviolet;
+    color: #ffffff;
+  }
+tr:nth-child(3)>td:nth-child(3){
+    background-color: black;
+    color: white;
+}
+</style>
+<script>
+function reverse(){
+    let cc = document.getElementById("colorCount").value;
+    if(cc==''){
+        cc=0;
+    }
+    document.getElementById("colorCount").value =Number(cc)+1;
+    let fontC= $("tr:nth-child(2)>td:nth-child(3)").css("color");
+    if (fontC=='rgb(255, 0, 0)'){
+        $("tr:nth-child(2)>td:nth-child(3)").css("color","white");
+        alert("빨간색🟥 에서 흰색⬜으로 변경 됩니다");
+    }else{
+        $("tr:nth-child(2)>td:nth-child(3)").css("color","red");
+        alert("흰색⬜ 에서 빨간색🟥으로 변경 됩니다");
+    }
+}
+</script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>mysql 결과!</title>
+</head>
+<body>
+<p>여기에 DataFrame를 표시해줄 겁니다.<br>
+MYSQL 에서 가져온 결과 입니다.<div ><button onclick="reverse()">👻</button>
+색상을 변경한 횟수 :  <input id="colorCount" value="" size="1" readonly></input>
+</div>
+</p>
+
+{% for table in tables %}
+            {{ table|safe }}
+{% endfor %}
+
+<p>어떻게 하면 DataFrame을 멋지게 표현할 수 있을까요?(hint : 노가다!)</p>
+<a href="/">Main으로 이동</a><br>
+</body>
+</html>
