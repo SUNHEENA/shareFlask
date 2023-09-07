@@ -90,7 +90,19 @@ class DB:
             temp = {'name': 'None', 'location': 'NonData' }
             ret.append(temp)
         return ret
+    def getIdCHK(self,id):
+        ret = []
+        sql = f"SELECT * FROM logintable where id='{id}' "
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        return len(rows)
 
+    def getIdPwCHK(self,id,pw):
+        ret = []
+        sql = f"SELECT * FROM logintable where id='{id}' and pw='{pw}' "
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        return len(rows)
     def __del__(self):
         self.db_con.close()
         self.cursor.close()

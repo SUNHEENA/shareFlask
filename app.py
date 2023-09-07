@@ -10,7 +10,9 @@ from flask import Flask, redirect, url_for
 import logging
 import MyEnDecryption
 import emailSender
+from cryptography.fernet import Fernet
 
+from cryptography.fernet import Fernet # symmetric encryption
 app = Flask(__name__, template_folder='static/FrontEnd')
 accountUser = MyEnDecryption.decrypt_account('mysqlUser','userAcount')
 def loopDataWithGoogleChart(inputList : dict):
@@ -190,6 +192,32 @@ def deleteWithWeb():
     return result
 # log = logging.getLogger('werkzeug')
 # log.setLevel(logging.ERROR)
+@app.route('/login')
+def loginPage():
+    return render_template('login.html')
+
+@app.route('/loginDo.ajax', methods=['POST'])
+def login_do():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    db = dbHandling.DB()
+    idCnt = db.getIdCHK(username)
+    resultSet=''
+    if idCnt==0:
+        resultSet='ID가 존재 하지 않습니다.'
+    else:
+        ##pw까지 체크 시도->
+        idCnt = db.getIdPwCHK(username,password)
+        if idCnt==0:
+             resultSet='PW가 일치하지 않습니다.'
+        else :
+             resultSet='loginSucess'
+    del db
+    return jsonify({'msg': resultSet})
+
+@app.route('/loginSucess')
+def logS():
+    return render_template('loginSucess.html')
 
 if __name__ == '__main__':
     ##app.run(host='0.0.0.0', port=9874,debug=True) # debug = True는 해당 파일의 코드를 수정할 때마다 Flask가 변경된 것을 인식하고 다시 시작한다.

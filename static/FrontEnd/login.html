@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="height:100vh">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <form id='loginForm'>
+                       <div class="styled-text">Flask Login Page<a href="/">🏠</a></div>
+                        <!--<div class="form-group"><img  width="80" height="80" src="static/image/loggin.png"/></div>-->
+                        <div class="form-group">
+                            <input type='text' id='username' name='username' placeholder='Username' required=true class='form-control'/>
+                        </div>
+                        <div class="form-group">
+                            <input type='password' id='password' name='password' placeholder='Password'required=true  class ='form-control'/>
+                        </div>
+                        <button type = 'submit' id = 'loginButton' class ='btn btn-primary'>Login</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type = 'text/javascript'>
+$(document).ready(function(){
+  $('#loginForm').on('submit', function(e){
+      e.preventDefault();
+      $.ajax({
+          url : '/loginDo.ajax',
+          method: 'POST',
+          data: {
+              username: $('#username').val(),
+              password: $('#password').val()
+          },
+          success: function(data){
+              // Handle the response from the server
+             	let msgs = data['msg']
+             	if(msgs=='loginSucess'){
+                    window.location.href = '/loginSucess';
+             	}else{
+                     Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: msgs
+                    })
+                }
+          },
+          error:function(error){
+              // Handle errors here
+              alert("Error occurred");
+          }
+      });
+  });
+});
+</script>
+
+</body>
+ <style>
+        .styled-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2em;
+            color: #3f51b5;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+    </style>
+</html>
