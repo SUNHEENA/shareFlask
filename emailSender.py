@@ -4,7 +4,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 from email.utils import formatdate
-
+import win32com.client
+import os
 def mainEmail(toAdd : str):
     style = """ .t2{font-size:10pt; font-family:"맑은 고딕"}
                                 .t3{font-size:11pt; font-family:"맑은 고딕"}
@@ -17,18 +18,13 @@ def mainEmail(toAdd : str):
                                     <div class="t2"> 
                                     ▣ 안녕하세요 ㅎㅎ 저는 web 입니다.<br><br> 
                                   </div>""".format(style)
-    msg = MIMEMultipart()
-    msgAlternative = MIMEMultipart('alternative')
-    msg['From'] = 'SystemAdmin'
-    msg['To'] =toAdd
-    msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = Header(s='flask web에서 버튼을 눌러서 간 메일 입니다.', charset='utf-8')
-    msgText = MIMEText(html, 'html')
-    msgAlternative.attach(msgText)
-    msg.attach(msgAlternative)
-    smtp_server = "k1mh02.amkor.co.kr"
-    port = 25
-    s = smtplib.SMTP(smtp_server, port)
-    s.send_message(msg)
-    s.quit()
+
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    newMail = outlook.CreateItem(0)
+    newMail.To = toAdd
+    # 메일 제목
+    newMail.Subject = "flask web에서 버튼을 눌러서 간 메일 입니다."
+    newMail.HTMLBody = html
+    newMail.Send()
+
     return 'sucess'
